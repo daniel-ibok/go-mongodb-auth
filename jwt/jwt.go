@@ -2,27 +2,12 @@ package jwt
 
 import (
 	"fmt"
-	"go-mongodb-auth/utils"
 	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	_ "github.com/joho/godotenv/autoload"
 )
-
-type Jwt struct {
-	secret string
-}
-
-var jt Jwt
-
-func init() {
-	err := utils.LoadEnv()
-	if err != nil {
-
-	}
-
-	jt = Jwt{secret: os.Getenv("SECRET_KEY")}
-}
 
 func CreateToken(email string) (string, *Claims, error) {
 	claims, err := NewClaims(email)
@@ -31,7 +16,7 @@ func CreateToken(email string) (string, *Claims, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(jt.secret))
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 	if err != nil {
 		return "", &Claims{}, err
 	}
@@ -44,7 +29,7 @@ func VerifyToken(tokenString string) (*Claims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("invalid token signing method")
 		}
-		return []byte(jt.secret), nil
+		return []byte(os.Getenv("SECRET_KEY")), nil
 	})
 
 	if err != nil {

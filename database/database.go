@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -20,10 +20,6 @@ var config *Config
 var DB *mongo.Database
 
 func init() {
-
-	if err := godotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
 
 	config = &Config{
 		MongoDBURI:        os.Getenv("MONGODB_URI"),
