@@ -34,7 +34,8 @@ func GetDBCollection() *mongo.Collection {
 }
 
 func NewDBInstance() error {
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(config.MongoDBURI))
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(config.MongoDBURI).SetServerAPIOptions(serverAPI))
 	if err != nil {
 		log.Fatal(err)
 	}
