@@ -18,6 +18,7 @@ type Config struct {
 
 var config *Config
 var DB *mongo.Database
+var Client *mongo.Client
 
 func init() {
 
@@ -41,5 +42,10 @@ func NewDBInstance() error {
 	}
 
 	DB = client.Database(config.MongoDBName)
+	Client = client
 	return nil
+}
+
+func Close() error {
+	return Client.Disconnect(context.Background())
 }
